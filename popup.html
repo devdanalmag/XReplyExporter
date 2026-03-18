@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TwReplyExport</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-brand">
+        <img src="icons/icon48.png" alt="TwReplyExport" class="header-icon">
+        <div>
+          <h1 class="header-title">TwReplyExport</h1>
+          <span class="header-subtitle">X/Twitter Replies Exporter</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Input Section -->
+    <section class="section">
+      <label class="input-label" for="tweetUrl">Tweet URL</label>
+      <div class="input-group">
+        <div class="input-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <input type="text" id="tweetUrl" class="input" placeholder="https://x.com/user/status/123456789">
+        <button id="pasteBtn" class="paste-btn" title="Paste from clipboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+      <div id="urlError" class="error-text" style="display:none;">Please enter a valid X/Twitter tweet URL</div>
+    </section>
+
+    <!-- Options Section -->
+    <section class="section">
+      <div class="options-row">
+        <div class="option-group">
+          <label class="input-label">Format</label>
+          <div class="format-selector">
+            <button class="format-btn active" data-format="csv">CSV</button>
+            <button class="format-btn" data-format="json">JSON</button>
+            <button class="format-btn" data-format="xlsx">XLSX</button>
+          </div>
+        </div>
+        <div class="option-group">
+          <label class="input-label">
+            <input type="checkbox" id="includeMetrics" checked> Metrics
+          </label>
+          <label class="input-label">
+            <input type="checkbox" id="includeUserInfo" checked> User Info
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="section">
+      <button id="startBtn" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Start Export
+      </button>
+    </section>
+
+    <!-- Progress Section (hidden by default) -->
+    <section id="progressSection" class="section progress-section" style="display:none;">
+      <div class="progress-header">
+        <span id="statusText" class="status-text">Initializing...</span>
+        <span id="replyCount" class="reply-count">0 replies</span>
+      </div>
+      <div class="progress-bar-container">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <div class="progress-actions">
+        <button id="stopBtn" class="btn btn-danger btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          </svg>
+          Stop
+        </button>
+        <button id="downloadBtn" class="btn btn-success btn-sm" style="display:none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </button>
+      </div>
+    </section>
+
+    <!-- Results Preview (hidden by default) -->
+    <section id="resultsSection" class="section" style="display:none;">
+      <div class="results-header">
+        <h3 class="results-title">Export Complete</h3>
+        <span id="totalCount" class="total-count"></span>
+      </div>
+      <div id="resultsPreview" class="results-preview"></div>
+      <button id="downloadResultsBtn" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download File
+      </button>
+    </section>
+
+    <!-- History Section -->
+    <section class="section">
+      <div class="history-header" id="historyToggle">
+        <span class="input-label">Export History</span>
+        <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      <div id="historyList" class="history-list" style="display:none;"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>TwReplyExport v1.0</span>
+      <span>•</span>
+      <span>100% Local Processing</span>
+    </footer>
+  </div>
+
+  <script src="lib/xlsx.mini.min.js"></script>
+  <script src="export.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
