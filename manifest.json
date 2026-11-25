@@ -1,10 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "TwReplyExport - X/Twitter Replies Export",
-  "version": "1.0.0",
-  "description": "Export replies and comments from any X/Twitter tweet to CSV, JSON, or Excel. All data processed locally.",
-  "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["*://x.com/*", "*://twitter.com/*"],
+  "name": "TwReplyExport Pro — Intelligent X Thread & Reply Saver",
+  "version": "2.0.0",
+  "description": "Save complete X/Twitter threads and replies with embedded images, smart organization, and AI-ready summaries to DOCX, Markdown, HTML, JSON, CSV, or Excel.",
+  "permissions": ["activeTab", "scripting", "storage", "unlimitedStorage"],
+  "host_permissions": [
+    "*://x.com/*",
+    "*://twitter.com/*",
+    "*://pbs.twimg.com/*",
+    "*://abs.twimg.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

@@ -1,134 +1,58 @@
 <p align="center">
-  <img src="icons/icon128.png" alt="TwReplyExport" width="80" />
+  <img src="icons/icon128.png" alt="TwReplyExport Pro" width="80" />
 </p>
 
-<h1 align="center">TwReplyExport</h1>
+<h1 align="center">TwReplyExport Pro v2.0</h1>
 <p align="center">
-  <strong>Export replies from any X/Twitter tweet to CSV, JSON, or Excel — 100% locally.</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3" />
-  <img src="https://img.shields.io/badge/platform-Chrome-green?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome" />
-  <img src="https://img.shields.io/badge/license-MIT-orange?style=flat-square" alt="MIT License" />
-  <img src="https://img.shields.io/badge/version-1.0.0-blueviolet?style=flat-square" alt="Version" />
+  <strong>Save complete X/Twitter threads &amp; replies with embedded images, intelligent organization, and readable exports to DOCX, Markdown, HTML, Excel, JSON, or CSV — 100% locally.</strong>
 </p>
 
 ---
 
-<p align="center">
-  <img src="preview.png" alt="TwReplyExport Preview" width="380" />
-</p>
-
-## ✨ Features
+## ✨ What's New in v2.0
 
 | Feature | Description |
 |---|---|
-| **Multi-format Export** | Download replies as **CSV**, **JSON**, or **XLSX** (Excel) |
-| **Auto-scroll Scraping** | Automatically scrolls through all replies — no manual work |
-| **Engagement Metrics** | Captures likes, retweets, reply counts, and views per reply |
-| **User Info** | Extracts display names, handles, profile URLs, and avatars |
-| **Smart Deduplication** | Unique ID generation prevents duplicate entries |
-| **Export History** | Stores the last 20 exports locally for quick re-downloads |
-| **100% Local** | All data is processed in your browser — nothing sent to any server |
-| **Auto-detect URL** | Automatically fills in the tweet URL from your active tab |
+| **Complete Thread Capture** | Captures ancestor context, the full Author Thread chain (auto-expanding "Show more" long posts), and community replies — and stops cleanly before `"Discover more"` spam. |
+| **Full Media & Rich Content** | Preserves high-resolution images (`name=large`), image alt-text, video/GIF thumbnails, quoted tweets, link cards, polls, emojis, and line breaks. |
+| **Readable Offline Exports with Embedded Images** | **Word (`.docx`)** with natively embedded images, **Markdown + Local Images Bundle (`.zip`)** for Obsidian/Notion, **Standalone Markdown (`.md`)**, and **Self-Contained Offline HTML (`.html`)** with base64 images, search, lightbox & Print-to-PDF. |
+| **Intelligent Local Organization** | Automatically reconstructs the Author Thread, pairs **Author Q&A** exchanges, ranks **Top Community Insights**, extracts a deduplicated **Shared Links Index**, builds a **Media Gallery**, detects auto-chapters, and filters out low-value noise (`gm`, emojis, `@threadreaderapp` spam). |
+| **Full-Page Interactive Reader Studio** | Open any captured thread in a clean full-page Reader (`reader.html`) with live search, topic tags, community tone breakdown, lightbox gallery, and one-click export to any format. |
+| **Optional Gemini AI Synthesis** | Works 100% offline with zero API key; optionally add your own Gemini API key (stored locally) to generate an AI Executive Summary, Community Themes, and a cleanly edited article version. |
+| **Power-User Data Exports** | Multi-sheet **Excel (`.xlsx`)** (`Overview`, `Author Thread`, `Replies & QA`, `Shared Links`), structured **JSON**, and enhanced **CSV**. |
 
-## 🚀 Installation
+## 🚀 Installation (Chrome Developer Mode)
 
-### From source (Developer Mode)
+1. Open **Chrome** and go to `chrome://extensions`
+2. Enable **Developer mode** (top right)
+3. Click **Load unpacked** and select this folder (`XReplyExporter`)
+4. Pin **TwReplyExport Pro** to your toolbar
 
-1. **Clone this repo**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/TwReplyExport.git
-   ```
-2. Open **Chrome** → navigate to `chrome://extensions`
-3. Enable **Developer mode** (top right toggle)
-4. Click **Load unpacked** → select the cloned folder
-5. Pin the extension from the toolbar for easy access
+## 📖 How to Use
 
-## 📖 Usage
-
-1. Navigate to any tweet on **x.com** (or twitter.com)
-2. Click the **TwReplyExport** icon in your toolbar
-3. The tweet URL is auto-detected — or paste/type one manually
-4. Choose your export format: `CSV` · `JSON` · `XLSX`
-5. Toggle **Metrics** and **User Info** checkboxes as needed
-6. Click **Start Export** — the extension scrolls and collects all replies
-7. Hit **Download** when scraping completes
+1. Open any X/Twitter thread on `x.com` or `twitter.com`
+2. Click the **TwReplyExport Pro** icon — the URL auto-fills
+3. Choose your capture scope: **Complete Thread**, **Author Only**, or **Replies**
+4. Pick your export format: `DOCX` · `MD + Images` · `MD` · `HTML` · `XLSX` · `JSON`
+5. Click **Capture & Organize Thread**
+6. Click **Open Organized Reader** to explore with images & search, or hit **Download** immediately!
 
 ## 📁 Project Structure
 
 ```
-TwReplyExport/
-├── manifest.json      # Chrome extension manifest (MV3)
-├── background.js      # Service worker — tab management & message relay
-├── content.js         # Content script — DOM scraping & auto-scroll
-├── popup.html         # Extension popup UI
-├── popup.css          # Dark-themed styles (X/Twitter inspired)
-├── popup.js           # Popup controller & state management
-├── export.js          # CSV / JSON / XLSX conversion & file download
-├── lib/
-│   └── xlsx.mini.min.js   # SheetJS for Excel export
-└── icons/
-    ├── icon16.png
-    ├── icon48.png
-    └── icon128.png
+XReplyExporter/
+├── manifest.json          # MV3 manifest (includes pbs.twimg.com image fetch permissions)
+├── background.js          # Service worker: tab orchestration, state recovery, reader launcher
+├── content.js             # Complete thread, media, quote, card & poll DOM scraper
+├── intelligence.js        # Local intelligence engine + optional Gemini AI enhancer
+├── zip-docx.js            # Zero-dependency PKZIP & OOXML (.docx) builder with image embedding
+├── export.js              # DOCX, MD+Images ZIP, MD, Offline HTML, XLSX, JSON & CSV exporters
+├── popup.html / .css / .js    # Extension popup controller
+├── reader.html / .css / .js   # Full-page Interactive Thread Reader & Export Studio
+├── lib/xlsx.mini.min.js   # SheetJS for multi-sheet Excel export
+└── icons/                 # Extension icons
 ```
-
-## 🔒 Permissions
-
-| Permission | Why it's needed |
-|---|---|
-| `activeTab` | Read the current tab URL to auto-detect tweets |
-| `scripting` | Inject the content script into X/Twitter pages |
-| `storage` | Save export history locally |
-| `Host: x.com, twitter.com` | Access tweet pages to scrape replies |
-
-## 📦 Export Fields
-
-<details>
-<summary><strong>Core fields</strong> (always included)</summary>
-
-- Display Name
-- Handle (`@username`)
-- Reply Text
-- Timestamp
-</details>
-
-<details>
-<summary><strong>Metrics</strong> (optional)</summary>
-
-- Likes
-- Retweets
-- Replies
-- Views
-</details>
-
-<details>
-<summary><strong>User Info</strong> (optional)</summary>
-
-- Profile URL
-- User Bio
-- Website
-- Location
-- Follower Count
-- Following Count
-</details>
-
-## 🛠️ Tech Stack
-
-- **Chrome Extension Manifest V3**
-- **Vanilla JavaScript** — no frameworks, no build step
-- **[SheetJS](https://sheetjs.com/)** — Excel (XLSX) export
-- **Inter** font for clean typography
-- Premium dark theme inspired by X/Twitter
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-<p align="center">
-  Made with ☕ — <em>Scrape responsibly.</em>
-</p>
+MIT License — see [LICENSE](LICENSE).

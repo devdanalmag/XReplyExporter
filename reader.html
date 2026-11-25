@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TwReplyExport Pro — Organized Thread Reader</title>
+  <link rel="stylesheet" href="reader.css">
+</head>
+<body>
+  <!-- Sticky Top Export Studio Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <img src="icons/icon48.png" alt="" class="brand-icon">
+      <div>
+        <div class="brand-name">TwReplyExport <span class="pro-tag">PRO</span></div>
+        <div class="brand-sub">Intelligent Thread Reader &amp; Export Studio</div>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <input type="search" id="searchInput" class="search-input" placeholder="Search thread, replies, authors...">
+      <label class="toggle-chip" title="Filter out short emoji/spam replies">
+        <input type="checkbox" id="hideNoiseToggle" checked>
+        <span>Hide Noise <small id="noiseBadge"></small></span>
+      </label>
+    </div>
+
+    <div class="topbar-actions">
+      <button id="aiEnhanceBtn" class="action-btn ai-btn" title="Generate AI Executive Summary & Edited Article">
+        ✨ AI Enhance
+      </button>
+      <div class="export-group">
+        <button class="action-btn primary" data-export="docx" title="Microsoft Word with embedded images">📄 DOCX</button>
+        <button class="action-btn" data-export="md-zip" title="Markdown + local images folder (.zip)">📦 MD+Img</button>
+        <button class="action-btn" data-export="md" title="Standalone Markdown (.md)">📝 MD</button>
+        <button class="action-btn" data-export="html" title="Offline self-contained HTML with base64 images">🌐 HTML</button>
+        <button class="action-btn" id="printBtn" title="Print or Save as PDF">🖨️ PDF</button>
+        <select id="moreExportSelect" class="more-select" title="More data formats">
+          <option value="">More…</option>
+          <option value="xlsx">Excel (.xlsx)</option>
+          <option value="json">JSON (.json)</option>
+          <option value="csv">CSV (.csv)</option>
+        </select>
+      </div>
+      <button id="themeToggleBtn" class="icon-btn" title="Toggle Dark/Light theme">🌗</button>
+    </div>
+  </header>
+
+  <!-- Toast Status Bar -->
+  <div id="toast" class="toast" style="display:none;"></div>
+
+  <!-- Main Workspace -->
+  <div class="layout">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <nav class="nav-list" id="navList"></nav>
+
+      <div class="side-card" id="topicsCard" style="display:none;">
+        <h4>Key Topics</h4>
+        <div class="tag-cloud" id="topicsCloud"></div>
+      </div>
+
+      <div class="side-card" id="sentimentCard" style="display:none;">
+        <h4>Community Tone</h4>
+        <div id="sentimentBars" class="sentiment-bars"></div>
+      </div>
+
+      <div class="side-card" id="contributorsCard" style="display:none;">
+        <h4>Top Contributors</h4>
+        <div id="contributorsList" class="contributors-list"></div>
+      </div>
+    </aside>
+
+    <!-- Reading Canvas -->
+    <main class="main-canvas" id="mainCanvas">
+      <div class="empty-state" id="loadingState">Loading organized thread...</div>
+    </main>
+  </div>
+
+  <!-- Image Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <!-- Optional AI Key Modal -->
+  <div class="modal-backdrop" id="aiModal" style="display:none;">
+    <div class="modal">
+      <h3>✨ Gemini AI Enhancement</h3>
+      <p>Generate an AI executive summary, thematic reply synthesis, and a clean edited article flow. Your key is stored locally in Chrome only.</p>
+      <label class="modal-label">Gemini API Key</label>
+      <input type="password" id="modalApiKey" class="modal-input" placeholder="AIza...">
+      <label class="modal-label">Model</label>
+      <select id="modalModel" class="modal-input">
+        <option value="gemini-2.5-flash">gemini-2.5-flash (Fast &amp; Recommended)</option>
+        <option value="gemini-2.5-pro">gemini-2.5-pro (Deep Reasoning)</option>
+      </select>
+      <div class="modal-actions">
+        <button id="modalCancel" class="action-btn">Cancel</button>
+        <button id="modalRun" class="action-btn ai-btn">Run AI Synthesis</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="lib/xlsx.mini.min.js"></script>
+  <script src="zip-docx.js"></script>
+  <script src="intelligence.js"></script>
+  <script src="export.js"></script>
+  <script src="reader.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TwReplyExport</title>
+  <title>TwReplyExport Pro</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -11,20 +11,26 @@
     <!-- Header -->
     <header class="header">
       <div class="header-brand">
-        <img src="icons/icon48.png" alt="TwReplyExport" class="header-icon">
+        <img src="icons/icon48.png" alt="TwReplyExport Pro" class="header-icon">
         <div>
-          <h1 class="header-title">TwReplyExport</h1>
-          <span class="header-subtitle">X/Twitter Replies Exporter</span>
+          <div class="header-title-row">
+            <h1 class="header-title">TwReplyExport</h1>
+            <span class="pro-badge">PRO</span>
+          </div>
+          <span class="header-subtitle">Intelligent X Thread, Image &amp; Reply Saver</span>
         </div>
       </div>
+      <button id="openLastReaderBtn" class="icon-pill-btn" title="Open last captured thread in Reader" style="display:none;">
+        Reader ↗
+      </button>
     </header>
 
     <!-- Input Section -->
     <section class="section">
-      <label class="input-label" for="tweetUrl">Tweet URL</label>
+      <label class="input-label" for="tweetUrl">Thread / Post URL</label>
       <div class="input-group">
         <div class="input-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
           </svg>
@@ -37,89 +43,136 @@
           </svg>
         </button>
       </div>
-      <div id="urlError" class="error-text" style="display:none;">Please enter a valid X/Twitter tweet URL</div>
+      <div id="urlError" class="error-text" style="display:none;">Please enter a valid X/Twitter post URL</div>
     </section>
 
-    <!-- Options Section -->
-    <section class="section">
-      <div class="options-row">
-        <div class="option-group">
-          <label class="input-label">Format</label>
-          <div class="format-selector">
-            <button class="format-btn active" data-format="csv">CSV</button>
-            <button class="format-btn" data-format="json">JSON</button>
-            <button class="format-btn" data-format="xlsx">XLSX</button>
-          </div>
+    <!-- Capture Mode -->
+    <section class="section compact">
+      <label class="input-label">Capture Scope</label>
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="full" title="Author thread + all organized community replies">
+          Complete Thread
+        </button>
+        <button class="mode-btn" data-mode="thread" title="Fast capture of author's thread only">
+          Author Only
+        </button>
+        <button class="mode-btn" data-mode="replies" title="Focus on community replies">
+          Replies
+        </button>
+      </div>
+    </section>
+
+    <!-- Format & Options -->
+    <section class="section compact">
+      <label class="input-label">Export Format</label>
+      <div class="format-grid">
+        <button class="format-btn active" data-format="docx" title="Microsoft Word with embedded images">DOCX</button>
+        <button class="format-btn" data-format="md-zip" title="Markdown + local images folder (.zip)">MD + Images</button>
+        <button class="format-btn" data-format="md" title="Clean single Markdown file">MD</button>
+        <button class="format-btn" data-format="html" title="Self-contained offline HTML reader with images">HTML</button>
+        <button class="format-btn" data-format="xlsx" title="Multi-sheet Excel workbook">XLSX</button>
+        <button class="format-btn" data-format="json" title="Structured JSON with intelligence">JSON</button>
+      </div>
+
+      <div class="checks-row">
+        <label class="check-label" title="Download & embed images directly inside DOCX, HTML, or MD bundle">
+          <input type="checkbox" id="embedImages" checked>
+          <span>Embed Images Offline</span>
+        </label>
+        <label class="check-label" title="Automatically hide low-value spam/emoji-only replies">
+          <input type="checkbox" id="filterNoise" checked>
+          <span>Smart Noise Filter</span>
+        </label>
+        <label class="check-label" title="Include likes, reposts, replies, and view counts">
+          <input type="checkbox" id="includeMetrics" checked>
+          <span>Metrics</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Optional AI Intelligence Drawer -->
+    <section class="section compact">
+      <div class="drawer-header" id="aiToggle">
+        <span class="input-label" style="margin-bottom:0;">
+          ✨ AI Intelligence <span class="optional-tag">Optional</span>
+        </span>
+        <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </div>
+      <div id="aiPanel" class="ai-panel" style="display:none;">
+        <p class="ai-hint">Smart local organization works 100% offline. Add a Gemini API key to also generate AI executive summaries &amp; edited articles.</p>
+        <div class="ai-field">
+          <input type="password" id="geminiApiKey" class="input ai-input" placeholder="Gemini API Key (stored locally only)">
         </div>
-        <div class="option-group">
-          <label class="input-label">
-            <input type="checkbox" id="includeMetrics" checked> Metrics
-          </label>
-          <label class="input-label">
-            <input type="checkbox" id="includeUserInfo" checked> User Info
+        <div class="ai-row">
+          <select id="geminiModel" class="ai-select">
+            <option value="gemini-2.5-flash">gemini-2.5-flash (Fast)</option>
+            <option value="gemini-2.5-pro">gemini-2.5-pro (Deep)</option>
+          </select>
+          <label class="check-label">
+            <input type="checkbox" id="autoAiEnhance">
+            <span>Auto-run</span>
           </label>
         </div>
       </div>
     </section>
 
-    <!-- Action Buttons -->
-    <section class="section">
+    <!-- Action Button -->
+    <section class="section compact">
       <button id="startBtn" class="btn btn-primary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polygon points="5 3 19 12 5 21 5 3"/>
         </svg>
-        Start Export
+        Capture &amp; Organize Thread
       </button>
     </section>
 
-    <!-- Progress Section (hidden by default) -->
+    <!-- Progress Section -->
     <section id="progressSection" class="section progress-section" style="display:none;">
       <div class="progress-header">
         <span id="statusText" class="status-text">Initializing...</span>
-        <span id="replyCount" class="reply-count">0 replies</span>
+        <span id="replyCount" class="reply-count">0 posts</span>
       </div>
       <div class="progress-bar-container">
         <div id="progressBar" class="progress-bar"></div>
       </div>
       <div class="progress-actions">
         <button id="stopBtn" class="btn btn-danger btn-sm">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-          </svg>
           Stop
         </button>
+        <button id="quickReaderBtn" class="btn btn-secondary btn-sm" style="display:none;">
+          Open Reader ↗
+        </button>
         <button id="downloadBtn" class="btn btn-success btn-sm" style="display:none;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
           Download
         </button>
       </div>
     </section>
 
-    <!-- Results Preview (hidden by default) -->
+    <!-- Results Dashboard -->
     <section id="resultsSection" class="section" style="display:none;">
       <div class="results-header">
-        <h3 class="results-title">Export Complete</h3>
+        <h3 class="results-title" id="resultsTitle">Thread Organized</h3>
         <span id="totalCount" class="total-count"></span>
       </div>
+      <div id="resultsStats" class="mini-stats"></div>
       <div id="resultsPreview" class="results-preview"></div>
-      <button id="downloadResultsBtn" class="btn btn-primary">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        Download File
-      </button>
+      <div class="results-btn-row">
+        <button id="openReaderBtn" class="btn btn-secondary">
+          📖 Open Organized Reader
+        </button>
+        <button id="downloadResultsBtn" class="btn btn-primary">
+          ⬇ Download <span id="downloadFmtLabel">DOCX</span>
+        </button>
+      </div>
+      <div id="exportProgressText" class="export-progress-text" style="display:none;"></div>
     </section>
 
     <!-- History Section -->
-    <section class="section">
-      <div class="history-header" id="historyToggle">
-        <span class="input-label">Export History</span>
+    <section class="section compact">
+      <div class="drawer-header" id="historyToggle">
+        <span class="input-label" style="margin-bottom:0;">Saved Thread History</span>
         <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"/>
         </svg>
@@ -129,13 +182,15 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <span>TwReplyExport v1.0</span>
+      <span>TwReplyExport Pro v2.0</span>
       <span>•</span>
       <span>100% Local Processing</span>
     </footer>
   </div>
 
   <script src="lib/xlsx.mini.min.js"></script>
+  <script src="zip-docx.js"></script>
+  <script src="intelligence.js"></script>
   <script src="export.js"></script>
   <script src="popup.js"></script>
 </body>
